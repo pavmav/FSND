@@ -5,8 +5,12 @@ import json
 
 from sqlalchemy.orm import backref
 
-database_name = "trivia"
-database_path = "postgresql://{}/{}".format('postgres:postgres@localhost:5432', database_name)
+DB_HOST = os.getenv('DB_HOST', 'localhost:5432')
+DB_USER = os.getenv('DB_USER', 'postgres')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
+DB_NAME = os.getenv('DB_NAME', 'trivia')
+
+database_path = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}'
 
 db = SQLAlchemy()
 
