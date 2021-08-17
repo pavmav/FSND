@@ -132,6 +132,9 @@ def create_app(test_config=None):
 
       else:
 
+        if None in (question, answer, category, difficulty):
+          abort(400)
+
         new_question = Question(question, answer, category, difficulty)
 
         new_question.insert()
