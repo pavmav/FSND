@@ -106,9 +106,6 @@ def create_app(test_config=None):
     or search questions depending
     on the request body.
     '''
-
-    print(request.get_json())
-
     try:
       question_data = request.get_json()
 
@@ -140,7 +137,8 @@ def create_app(test_config=None):
         new_question.insert()
 
         return jsonify({
-          'success': True
+          'success': True,
+          'question_id': new_question.id
         })
 
     except:
@@ -151,6 +149,9 @@ def create_app(test_config=None):
   def questions_in_category(category_id):
     '''Endpoint to get questions based on category.
     '''
+    if Category.query.get(int(category_id)) == None:
+      abort(404)
+
     try:
 
       questions = [q.format() for q in Question.query.filter(Question.category == category_id).all()]
@@ -233,6 +234,14 @@ def create_app(test_config=None):
       'error': 422,
       'message': 'Request is unprocessable'
     }), 422
+
+  @app.errorhandler(405)
+  def method_not_allowed(error):
+    return jsonify({
+      'success': False,
+      'error': 405,
+      'message': 'Method not allowed'
+    }), 405
 
   return app
 
